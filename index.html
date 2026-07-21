@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>روان ورس</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5FAF8; --surface:#FFFFFF; --surface-soft:#EEF6F3;
+    --teal-900:#17302E; --teal-700:#245652; --teal-600:#2F6F6B; --teal-500:#3F8983;
+    --sage-400:#8FBC94; --sage-300:#B7D9BB; --sage-100:#E4F1E6;
+    --gold-500:#C9A66B; --amber-500:#E0A458; --red-500:#D9695A;
+    --ink:#1E2B2A; --ink-muted:#5C6F6D; --ink-faint:#93A5A2; --line:#DCEAE6;
+    --radius-lg:22px; --radius-md:14px; --radius-sm:9px;
+    --shadow-card:0 2px 4px rgba(23,48,46,.04), 0 12px 28px -12px rgba(23,48,46,.12);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; font-family:'Vazirmatn',sans-serif; background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4{margin:0;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 24px;}
+  .btn{font-family:inherit; border:none; cursor:pointer; border-radius:12px; font-size:12.5px; font-weight:700; padding:11px 18px; display:inline-flex; align-items:center; gap:6px; transition:transform .12s;}
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--teal-600); color:#fff;}
+  .btn-primary:hover{background:var(--teal-700);}
+  .btn-outline{background:transparent; border:1.5px solid var(--line); color:var(--teal-700);}
+  .btn-gold{background:var(--gold-500); color:#fff;}
+  .btn-red{background:var(--red-500); color:#fff;}
+  .btn-sm{padding:8px 14px; font-size:11px; border-radius:10px;}
+  .btn:disabled{opacity:.45; cursor:not-allowed;}
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg); box-shadow:var(--shadow-card); padding:20px;}
+  .trust-badge{display:inline-flex; align-items:center; gap:4px; background:var(--sage-100); color:var(--teal-700); font-size:10.5px; font-weight:700; padding:4px 9px; border-radius:999px; border:1px solid var(--sage-300);}
+  .pending-tag{display:inline-flex; align-items:center; gap:5px; background:#FDF1E1; color:var(--amber-500); font-size:10px; font-weight:700; padding:4px 9px; border-radius:999px;}
+  .sponsored-tag{display:inline-flex; align-items:center; gap:4px; background:#F1E7FF; color:#8B5CF6; font-size:10px; font-weight:700; padding:4px 9px; border-radius:999px;}
+  .premium-tag{display:inline-flex; align-items:center; gap:4px; background:#FBF6EC; color:var(--gold-500); font-size:10px; font-weight:700; padding:4px 9px; border-radius:999px; border:1px solid #F0DFB8;}
+  input,textarea,select{font-family:inherit; border:1.5px solid var(--line); border-radius:var(--radius-sm); padding:10px 12px; font-size:12.5px; color:var(--ink); width:100%;}
+  input:focus,textarea:focus,select:focus{outline:none; border-color:var(--teal-500); box-shadow:0 0 0 3px rgba(63,137,131,.12);}
+  label{font-size:11.5px; font-weight:600; color:var(--ink-muted); display:block; margin-bottom:5px;}
+  .field{margin-bottom:12px;}
+  .hint{font-size:10.5px; color:var(--ink-faint); margin-top:4px;}
+
+  .nav{position:sticky; top:0; z-index:50; background:rgba(245,250,248,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--line);}
+  .nav-inner{max-width:1180px; margin:0 auto; padding:12px 24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+  .brand{display:flex; align-items:center; gap:9px;}
+  .brand-logo{width:34px;height:34px;border-radius:10px; background:linear-gradient(155deg,var(--teal-600),var(--sage-400)); display:flex;align-items:center;justify-content:center; color:#fff; font-weight:800; font-size:13px;}
+  .brand-name{font-weight:800; font-size:14px; color:var(--teal-900);}
+  .brand-tag{font-size:10px; color:var(--ink-muted);}
+  .tabs{display:flex; gap:4px; background:var(--surface-soft); padding:4px; border-radius:999px; border:1px solid var(--line); flex-wrap:wrap;}
+  .tab-btn{border:none; background:transparent; padding:8px 13px; border-radius:999px; font-family:inherit; font-size:11px; font-weight:700; color:var(--ink-muted); cursor:pointer;}
+  .tab-btn.active{background:var(--teal-600); color:#fff;}
+  .wallet-pill{display:flex; align-items:center; gap:6px; background:#fff; border:1px solid var(--line); padding:7px 13px; border-radius:999px; font-size:11px; font-weight:700; color:var(--teal-700);}
+
+  .panel{display:none; padding:32px 0 64px;}
+  .panel.active{display:block; animation:fade .3s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);}}
+
+  .section-head{max-width:680px; margin:0 auto 26px; text-align:center;}
+  .eyebrow{display:inline-flex; align-items:center; gap:6px; background:var(--sage-100); color:var(--teal-700); font-size:11px; font-weight:700; padding:5px 13px; border-radius:999px; margin-bottom:12px;}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--sage-400);}
+  .section-head h2{font-size:20px; font-weight:800; color:var(--teal-900); margin-bottom:6px;}
+  .section-head p{font-size:12px; color:var(--ink-muted); line-height:1.9; margin:0;}
+
+  .hero{background:linear-gradient(180deg, var(--sage-100) 0%, var(--bg) 70%); padding:52px 24px 36px; text-align:center; border-radius:0 0 32px 32px; margin-bottom:8px;}
+  .hero h1{font-size:26px; font-weight:800; color:var(--teal-900); line-height:1.6; max-width:680px; margin:0 auto 12px;}
+  .hero p{font-size:13px; color:var(--ink-muted); max-width:520px; margin:0 auto 22px; line-height:2;}
+  .hero-split{display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:760px; margin:0 auto;}
+  .hero-panel{background:#fff; border:1.5px solid var(--line); border-radius:var(--radius-lg); padding:20px; text-align:right;}
+  .hero-panel.demand{border-color:var(--teal-600);}
+  .hero-panel h3{font-size:13.5px; color:var(--teal-900); margin-bottom:6px;}
+  .hero-panel p{font-size:11px; color:var(--ink-muted); line-height:1.85; margin:0 0 12px;}
+  .gift-banner{margin-top:20px; display:inline-flex; align-items:center; gap:8px; background:#FBF6EC; border:1px solid #F0DFB8; color:#8A6D2F; font-size:11px; font-weight:600; padding:9px 16px; border-radius:999px;}
+
+  .persona-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+  .persona-card{border:1.5px solid var(--line); border-radius:var(--radius-md); padding:16px; text-align:center; cursor:pointer; background:#fff;}
+  .persona-card.sel{border-color:var(--teal-600); background:var(--sage-100);}
+  .persona-card .ic{font-size:22px; margin-bottom:8px;}
+  .persona-card h5{font-size:12px; color:var(--teal-900); margin-bottom:4px;}
+  .persona-card p{font-size:10.5px; color:var(--ink-muted); margin:0; line-height:1.7;}
+  .persona-grid.two{grid-template-columns:repeat(2,1fr);}
+
+  .dash-grid{display:grid; grid-template-columns:190px 1fr; gap:16px;}
+  .side-nav{background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:14px 10px; height:fit-content;}
+  .side-item{padding:10px 12px; border-radius:10px; font-size:11px; font-weight:600; color:var(--ink-muted); margin-bottom:2px; cursor:pointer;}
+  .side-item.active{background:var(--sage-100); color:var(--teal-700);}
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  .wallet-card{background:linear-gradient(135deg,var(--teal-700),var(--teal-600)); color:#fff; border:none;}
+  .wallet-label{font-size:11px; opacity:.85; margin-bottom:5px;}
+  .wallet-amount{font-size:20px; font-weight:800; margin-bottom:10px;}
+
+  .order-form h4{font-size:12.5px; color:var(--teal-900); margin-bottom:10px; display:flex; align-items:center; gap:6px;}
+  .order-list{display:flex; flex-direction:column; gap:10px;}
+  .order-item{border:1px solid var(--line); border-radius:var(--radius-md); padding:14px;}
+  .order-item .top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:6px;}
+  .order-item h5{font-size:12px; color:var(--teal-900); margin-bottom:3px;}
+  .order-item .sub{font-size:10px; color:var(--ink-faint);}
+  .status-tag{font-size:9.5px; font-weight:700; padding:4px 9px; border-radius:999px; white-space:nowrap;}
+  .st-awaiting{background:#FDF1E1; color:var(--amber-500);}
+  .st-progress{background:#E7F0FF; color:#3E6FD9;}
+  .st-delivered{background:#F1E7FF; color:#8B5CF6;}
+  .st-released{background:var(--sage-100); color:#2E8B57;}
+  .st-disputed{background:#FBE4E1; color:var(--red-500);}
+  .split-mini{display:flex; gap:10px; flex-wrap:wrap; font-size:10px; color:var(--ink-muted); margin:8px 0;}
+  .split-mini b{color:var(--ink);}
+  .match-note{display:flex; align-items:center; gap:6px; font-size:10.5px; background:var(--surface-soft); color:var(--teal-700); padding:7px 10px; border-radius:8px; margin:8px 0;}
+
+  .support-card{background:linear-gradient(180deg,#fff,#FBF6EC); border-color:var(--gold-500);}
+  .support-card h4{font-size:13px; color:var(--teal-900); margin-bottom:6px; display:flex; align-items:center; gap:6px;}
+  .pulse-dot{width:7px;height:7px;border-radius:50%; background:#3EBE7A; animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(62,190,122,.5);}70%{box-shadow:0 0 0 7px rgba(62,190,122,0);}100%{box-shadow:0 0 0 0 rgba(62,190,122,0);}}
+  .chat-box{display:none; margin-top:12px; background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:11px; color:var(--ink-muted);}
+  .chat-box.open{display:block;}
+
+  .lib-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px;}
+  .lib-item{border:1px solid var(--line); border-radius:var(--radius-md); padding:10px; text-align:center; font-size:10px; color:var(--ink-muted);}
+
+  .asset-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  .asset-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); overflow:hidden; text-align:right; position:relative;}
+  .asset-thumb{height:70px; display:flex; align-items:center; justify-content:center; font-size:22px;}
+  .asset-body{padding:12px;}
+  .asset-body h5{font-size:12px; color:var(--teal-900); margin-bottom:3px;}
+  .asset-body .price{font-size:11px; color:var(--ink-muted); margin-bottom:7px;}
+  .badge-row{display:flex; gap:5px; flex-wrap:wrap; margin-bottom:6px;}
+
+  .req-card{border:1px solid var(--line); border-radius:var(--radius-md); padding:14px; margin-bottom:10px;}
+  .req-card .brief{font-size:10.5px; color:var(--ink-muted); background:var(--surface-soft); padding:8px 10px; border-radius:8px; margin:8px 0; line-height:1.7;}
+
+  .designer-card{border:1px solid var(--line); border-radius:var(--radius-md); padding:16px; text-align:center; position:relative;}
+  .designer-card.current{border-color:var(--teal-600); box-shadow:0 4px 16px -6px rgba(47,111,107,.25);}
+  .designer-avatar{width:46px;height:46px;border-radius:50%; background:var(--sage-100); display:flex;align-items:center;justify-content:center; font-size:20px; margin:0 auto 8px;}
+  .designer-card h5{font-size:12.5px; color:var(--teal-900); margin-bottom:2px;}
+  .designer-card .spec{font-size:10.5px; color:var(--ink-muted); margin-bottom:6px;}
+  .rating{font-size:11px; color:var(--gold-500); font-weight:700;}
+
+  .donut-mini{display:flex; align-items:center; gap:10px;}
+  .toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--teal-900); color:#fff; padding:11px 20px; border-radius:999px; font-size:11.5px; font-weight:600; opacity:0; pointer-events:none; transition:all .3s; z-index:100; max-width:90%; text-align:center;}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  footer{text-align:center; padding:26px 0; font-size:11px; color:var(--ink-faint); border-top:1px solid var(--line);}
+
+  @media (max-width:880px){
+    .hero-split,.grid-2,.grid-3,.asset-grid,.lib-grid,.persona-grid{grid-template-columns:1fr;}
+    .dash-grid{grid-template-columns:1fr;}
+    .side-nav{display:none;}
+  }
+  /* ---- Auth overlay (added — matches existing design tokens, no new palette) ---- */
+  #authOverlay{position:fixed; inset:0; background:var(--bg); z-index:999; display:flex; align-items:center; justify-content:center; padding:24px;}
+  #authOverlay.hidden{display:none;}
+  .auth-card{width:100%; max-width:420px;}
+  .auth-toggle{display:flex; gap:8px; margin-bottom:16px;}
+  .auth-toggle button{flex:1;}
+  .role-toggle{display:flex; gap:8px; margin:10px 0 14px;}
+  .role-toggle button{flex:1;}
+  .auth-error{color:var(--red-500); font-size:11px; margin-top:8px; min-height:14px;}
+  #appRoot.hidden{display:none;}
+  .topbar-user{display:flex; align-items:center; gap:10px; font-size:11px; color:var(--ink-muted);}
+</style>
+</head>
+<body>
+
+<div id="authOverlay">
+  <div class="card auth-card">
+    <h2 style="margin-bottom:4px;">روان‌ورس</h2>
+    <p style="font-size:11px;color:var(--ink-muted);margin-bottom:16px;">برای ادامه وارد شو یا حساب بساز — این نسخه با بک‌اند و پایگاه‌داده واقعی کار می‌کند.</p>
+    <div class="auth-toggle">
+      <button type="button" class="btn btn-primary btn-sm" id="tabLoginBtn" onclick="setAuthMode('login')">ورود</button>
+      <button type="button" class="btn btn-outline btn-sm" id="tabRegisterBtn" onclick="setAuthMode('register')">ثبت‌نام</button>
+    </div>
+
+    <div id="registerRoleBlock" style="display:none;">
+      <div class="role-toggle">
+        <button type="button" class="btn btn-outline btn-sm" id="roleClinicBtn" onclick="setRole('clinic')">کلینیک (درمانگر)</button>
+        <button type="button" class="btn btn-outline btn-sm" id="roleDesignerBtn" onclick="setRole('designer')">طراح</button>
+      </div>
+      <div class="field"><label>نام نمایشی</label><input id="authName" type="text" placeholder="مثلاً کلینیک آرامش یا استودیو نووا"></div>
+      <div class="field" id="personaField" style="display:none;">
+        <label>نوع فعالیت</label>
+        <select id="authPersona"></select>
+      </div>
+    </div>
+
+    <div class="field"><label>ایمیل</label><input id="authEmail" type="email" placeholder="you@example.com"></div>
+    <div class="field"><label>رمز عبور</label><input id="authPassword" type="password" placeholder="حداقل ۸ کاراکتر"></div>
+    <button class="btn btn-primary" style="width:100%;" onclick="submitAuth()">ادامه</button>
+    <div class="auth-error" id="authError"></div>
+  </div>
+</div>
+
+<div id="appRoot" class="hidden">
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="brand-logo">RV</div>
+      <div><div class="brand-name">روان‌ورس</div><div class="brand-tag">Pay-per-Patient Marketplace</div></div>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab-btn active" data-tab="landing">فرود</button>
+      <button class="tab-btn" data-tab="onboarding">آنبوردینگ</button>
+      <button class="tab-btn" data-tab="demand">پنل درمانگر</button>
+      <button class="tab-btn" data-tab="supply">پنل طراح</button>
+      <button class="tab-btn" data-tab="network">شبکه طراحان</button>
+      <button class="tab-btn" data-tab="store">فروشگاه فایل</button>
+    </div>
+    <div class="wallet-pill">💰 <span id="walletTop">۱٬۹۵۰٬۰۰۰</span> ت</div>
+  </div>
+</nav>
+
+<!-- ============ LANDING ============ -->
+<div class="panel active" id="panel-landing">
+  <div class="wrap">
+    <div class="hero">
+      <span class="eyebrow"><span class="dot"></span> بازار چندوجهی سالمت روان دیجیتال</span>
+      <h1>دنیای مجازی، درمان واقعی</h1>
+      <p>پرداخت دقیقاً به‌ازای هر مراجع، تطبیق هوشمند با طراح متخصص، بدون حق اشتراک سنگین.</p>
+      <div class="hero-split">
+        <div class="hero-panel demand">
+          <h3>🧑‍⚕️ برای درمانگران و کلینیک‌ها</h3>
+          <p>سفارش محیط درمانی زیر ۵ دقیقه؛ سیستم خودش مناسب‌ترین طراح رو پیدا می‌کنه.</p>
+          <button class="btn btn-primary" onclick="switchTab('onboarding')">شروع به‌عنوان درمانگر</button>
+        </div>
+        <div class="hero-panel">
+          <h3>🎨 برای طراحان سه‌بعدی</h3>
+          <p>بازار تخصصی سالمت روان دیجیتال، با پروفایل امتیازدار و امکان تبلیغ ویژه.</p>
+          <button class="btn btn-outline" onclick="switchTab('supply')">پیوستن به‌عنوان طراح</button>
+        </div>
+      </div>
+      <div class="gift-banner">🎁 پذیرندگان آغازین: شارژ هدیه‌ی اولیه‌ی کیف پول برای اولین سفارش</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ONBOARDING ============ -->
+<div class="panel" id="panel-onboarding">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow"><span class="dot"></span> سمت تقاضا</span>
+      <h2>پرسونای خودت رو انتخاب کن</h2>
+      <p>طبق اعتبارسنجی سند، مشتریان به پرسوناهای کاملاً هدفمند تفکیک شدند — این انتخاب روی تطبیق هوشمند طراح اثر می‌ذاره.</p>
+    </div>
+    <div class="persona-grid" id="demandPersonaGrid"></div>
+    <div style="text-align:center; margin-top:22px;">
+      <button class="btn btn-primary" onclick="switchTab('demand')">ورود به داشبورد →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DEMAND DASHBOARD ============ -->
+<div class="panel" id="panel-demand">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow"><span class="dot"></span> پنل درمانگر · <span id="demandPersonaLabel">—</span></span>
+      <h2>داشبورد اصلی</h2>
+      <p>سفارش ثبت کن؛ سیستم تطبیق هوشمند، طراح مناسب رو خودش پیشنهاد می‌ده.</p>
+    </div>
+    <div class="dash-grid">
+      <div class="side-nav">
+        <div class="side-item active">🏠 داشبورد</div>
+        <div class="side-item" onclick="switchTab('store')">🧩 Asset Store</div>
+        <div class="side-item" onclick="switchTab('network')">👥 شبکه طراحان</div>
+        <div class="side-item">📁 کتابخانه من</div>
+      </div>
+      <div>
+        <div class="grid-3" style="margin-bottom:14px;">
+          <div class="card wallet-card">
+            <div class="wallet-label">کیف پول اعتباری</div>
+            <div class="wallet-amount"><span id="walletDash">۱٬۹۵۰٬۰۰۰</span> ت</div>
+            <button class="btn btn-sm" style="background:#fff;color:var(--teal-700);" onclick="topUp()">+ شارژ ۵۰۰٬۰۰۰ ت</button>
+          </div>
+          <div class="card support-card">
+            <h4><span class="pulse-dot"></span> پشتیبانی VIP</h4>
+            <p style="font-size:10.5px;color:var(--ink-muted);margin:0 0 8px;">در حین جلسه مشکلی پیش اومد؟</p>
+            <button class="btn btn-gold btn-sm" onclick="toggleChat()">چت زنده</button>
+            <div class="chat-box" id="chatBox">🟢 کارشناس VIP: سلام! مشکل فنی‌تون چیه؟</div>
+          </div>
+          <div class="card" id="premiumClinicCard">
+            <h4 style="font-size:12.5px;color:var(--teal-900);margin-bottom:6px;">👑 اشتراک Premium کلینیک</h4>
+            <p style="font-size:10.5px;color:var(--ink-muted);margin:0 0 8px;">دسترسی نامحدود آرشیو Asset Store + اولویت VIP</p>
+            <button class="btn btn-outline btn-sm" id="premiumClinicBtn" onclick="subscribeClinicPremium()">فعال‌سازی (۸۰۰٬۰۰۰ ت/ماه)</button>
+          </div>
+        </div>
+
+        <div class="card order-form" style="margin-bottom:14px;">
+          <h4>⚡ ثبت سفارش سریع محیط درمانی (پرداخت به‌ازای هر مراجع)</h4>
+          <div class="grid-2">
+            <div>
+              <div class="field"><label>عنوان محیط درمانی</label><input id="ordTitle" type="text" value="آسانسور شیشه‌ای — درمان کلاستروفوبیا"></div>
+              <div class="field"><label>سطح پیچیدگی (کمیسیون پلتفرم)</label>
+                <select id="ordLevel">
+                  <option value="15">ساده — ۱۵٪</option>
+                  <option value="18" selected>متوسط — ۱۸٪</option>
+                  <option value="20">پیشرفته — ۲۰٪</option>
+                </select>
+              </div>
+              <div class="field"><label>تعداد مراجعینی که از این محیط استفاده می‌کنند</label><input id="ordPatients" type="number" value="1" min="1"></div>
+            </div>
+            <div>
+              <div class="field"><label>مبلغ کل قرارداد (تومان)</label><input id="ordBudget" type="number" value="500000" step="10000">
+                <div class="hint" id="perPatientHint">هزینه به‌ازای هر مراجع: ۵۰۰٬۰۰۰ تومان</div>
+              </div>
+              <div class="field"><label>🖼️ تزریق محتوای شخصی / توضیحات تکمیلی</label><textarea id="ordBrief" rows="3">قابلیت تنظیم سرعت و ارتفاع آسانسور، مطابق پروتکل مواجهه تدریجی.</textarea></div>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="createOrder()">ثبت سفارش — تطبیق هوشمند با طراح</button>
+        </div>
+
+        <div class="card">
+          <h4 style="font-size:12.5px;color:var(--teal-900);margin-bottom:12px;">📋 سفارش‌های من (Escrow)</h4>
+          <div class="order-list" id="demandOrderList"></div>
+        </div>
+
+        <div class="card" style="margin-top:14px;">
+          <h4 style="font-size:12.5px;color:var(--teal-900);margin-bottom:10px;">📁 کتابخانه ابری اختصاصی</h4>
+          <div class="lib-grid">
+            <div class="lib-item">🎧 فایل صوتی</div>
+            <div class="lib-item">🖼️ بافت محیط</div>
+            <div class="lib-item">🧍 آواتار</div>
+            <div class="lib-item">📄 گزارش جلسه</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SUPPLY DASHBOARD ============ -->
+<div class="panel" id="panel-supply">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow"><span class="dot"></span> وجه عرضه</span>
+      <h2>پنل طراح</h2>
+      <p>ابتدا انتخاب کن به‌عنوان کدام نوع تأمین‌کننده فعالیت می‌کنی.</p>
+    </div>
+    <div class="persona-grid two" id="supplyPersonaGrid" style="margin-bottom:20px;"></div>
+
+    <div class="grid-3" style="margin-bottom:14px;">
+      <div class="card">
+        <h4 style="font-size:12px;color:var(--teal-900);margin-bottom:6px;">درآمد کیف پول طراح</h4>
+        <div style="font-size:19px;font-weight:800;color:var(--teal-700);"><span id="designerEarnings">۰</span> ت</div>
+        <p style="font-size:10px;color:var(--ink-muted);margin:6px 0 0;">شامل سهم فروشگاه و پروژه‌های سفارشی</p>
+      </div>
+      <div class="card">
+        <h4 style="font-size:12px;color:var(--teal-900);margin-bottom:6px;">🚀 تبلیغات ویژه</h4>
+        <p style="font-size:10px;color:var(--ink-muted);margin:0 0 8px;">پروفایل و فایل‌هات رو بالای نتایج بیار</p>
+        <button class="btn btn-outline btn-sm" id="promoteBtn" onclick="promoteCurrentDesigner()">فعال‌سازی (۱۵۰٬۰۰۰ ت)</button>
+      </div>
+      <div class="card">
+        <h4 style="font-size:12px;color:var(--teal-900);margin-bottom:6px;">👑 اشتراک Premium طراح</h4>
+        <p style="font-size:10px;color:var(--ink-muted);margin:0 0 8px;">کاهش ۵٪ کمیسیون روی پروژه‌های سفارشی بعدی</p>
+        <button class="btn btn-outline btn-sm" id="premiumDesignerBtn" onclick="subscribeDesignerPremium()">فعال‌سازی (۲۰۰٬۰۰۰ ت)</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <h4 style="font-size:12.5px;color:var(--teal-900);margin-bottom:10px;">📤 انتشار فایل جدید در Asset Store</h4>
+      <div class="grid-2">
+        <div class="field"><label>نام سناریو</label><input id="newAssetName" type="text" placeholder="مثلاً: حیاط شلوغ مدرسه"></div>
+        <div class="field"><label>قیمت فروش (تومان)</label><input id="newAssetPrice" type="number" value="300000" step="10000"></div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="publishAsset()">ارسال برای بررسی مشاور بالینی</button>
+    </div>
+
+    <div class="card">
+      <h4 style="font-size:12.5px;color:var(--teal-900);margin-bottom:12px;">📥 درخواست‌های تطبیق‌یافته با شما</h4>
+      <div id="supplyRequestList"></div>
+      <div id="supplyEmptyMsg" style="font-size:11px;color:var(--ink-faint);">فعلاً درخواستی برای این طراح تطبیق نشده — از پنل درمانگر یک سفارش هم‌راستا با تخصص این طراح ثبت کن.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DESIGNER NETWORK ============ -->
+<div class="panel" id="panel-network">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow"><span class="dot"></span> منابع شبکه‌ای</span>
+      <h2>شبکه طراحان تأییدشده</h2>
+      <p>مهم‌ترین دارایی مارکت‌پلیس؛ هر طراح امتیاز، تخصص و تعداد پروژه‌های تکمیل‌شده‌ی خودش رو داره.</p>
+    </div>
+    <div class="grid-3" id="designerNetworkGrid"></div>
+  </div>
+</div>
+
+<!-- ============ ASSET STORE ============ -->
+<div class="panel" id="panel-store">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow"><span class="dot"></span> فروشگاه فایل</span>
+      <h2>Asset Store</h2>
+      <p>خرید فوری، بدون Escrow. آیتم‌های ویژه (تبلیغ‌شده) اول نمایش داده می‌شن.</p>
+    </div>
+    <div class="asset-grid" id="storeGrid"></div>
+  </div>
+</div>
+
+<footer>روان‌ورس (RavanVerse) — نسخه متصل به بک‌اند و پایگاه‌داده واقعی · <span id="logoutLink" style="cursor:pointer;text-decoration:underline;" onclick="logout()">خروج از حساب</span></footer>
+<div class="toast" id="toast"></div>
+</div><!-- /#appRoot -->
+
+<script>
+/* ==================================================================
+   RavanVerse — client logic, now talking to a REAL backend.
+   All money/commission/validation logic lives server-side (src/routes/*).
+   This file only renders what the API returns and sends user actions to it.
+   ================================================================== */
+
+// ⚠️ EDIT THIS after you deploy the backend (see DEPLOY.md)
+const API_BASE = 'https://ravanverse-backend.onrender.com/api';
+
+const DEMAND_PERSONAS = [
+  {id:'phobia', icon:'😨', name:'متخصص مواجهه‌درمانی فوبیا/PTSD', desc:'تمرکز روی مواجهه تدریجی و اضطراب'},
+  {id:'social', icon:'🗣️', name:'متخصص مهارت‌های نرم و اجتماعی', desc:'آموزش مهارت اجتماعی و مصاحبه'},
+  {id:'clinic', icon:'🏥', name:'مدیر کلینیک هزینه‌محور', desc:'اولویت با شفافیت مالی و صرفه‌جویی'},
+];
+const SUPPLY_PERSONAS = [
+  {id:'indie', icon:'🎨', name:'طراح سه‌بعدی مستقل', desc:'پروژه‌های سفارشی، بازار بکر'},
+  {id:'studio', icon:'🎬', name:'استودیوی بازی‌سازی', desc:'ظرفیت بالاتر، پروژه‌های حجیم'},
+];
+
+let session = { token: localStorage.getItem('rv_token') || null, user: null };
+let serverState = null;     // last payload from GET /api/state
+let selectedDemandPersonaId = 'phobia'; // client-only preference used when creating an order
+
+/* ---------------- API HELPER ---------------- */
+async function api(path, { method = 'GET', body } = {}) {
+  const res = await fetch(API_BASE + path, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(session.token ? { Authorization: 'Bearer ' + session.token } : {}),
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'خطای غیرمنتظره');
+  return data;
+}
+
+/* ---------------- HELPERS ---------------- */
+function fmt(n){ return Math.round(n||0).toLocaleString('fa-IR'); }
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>t.classList.remove('show'), 3000);
+}
+function statusMeta(s){
+  return {
+    awaiting_designer:{label:'در انتظار پذیرش طراح', cls:'st-awaiting'},
+    in_progress:{label:'در حال ساخت', cls:'st-progress'},
+    delivered:{label:'تحویل شد — منتظر تأیید', cls:'st-delivered'},
+    released:{label:'تکمیل شد — وجه آزاد شد', cls:'st-released'},
+    disputed:{label:'در حال داوری اختلاف', cls:'st-disputed'},
+  }[s];
+}
+function designerById(id){ return (serverState?.designers || []).find(d=>d.id===id); }
+
+/* ---------------- TABS ---------------- */
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+name));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+
+/* ==================================================================
+   AUTH — email/password + JWT. Real accounts, real password hashing
+   (bcrypt) happen on the server; nothing sensitive is stored client-side
+   besides the signed session token.
+   ================================================================== */
+let authMode = 'login';
+let authRole = 'clinic';
+
+function setAuthMode(mode){
+  authMode = mode;
+  document.getElementById('tabLoginBtn').className = 'btn btn-sm ' + (mode==='login' ? 'btn-primary' : 'btn-outline');
+  document.getElementById('tabRegisterBtn').className = 'btn btn-sm ' + (mode==='register' ? 'btn-primary' : 'btn-outline');
+  document.getElementById('registerRoleBlock').style.display = mode==='register' ? 'block' : 'none';
+  document.getElementById('authError').textContent = '';
+}
+function setRole(role){
+  authRole = role;
+  document.getElementById('roleClinicBtn').className = 'btn btn-sm ' + (role==='clinic' ? 'btn-primary' : 'btn-outline');
+  document.getElementById('roleDesignerBtn').className = 'btn btn-sm ' + (role==='designer' ? 'btn-primary' : 'btn-outline');
+  const personaField = document.getElementById('personaField');
+  const select = document.getElementById('authPersona');
+  if(role === 'designer'){
+    personaField.style.display = 'block';
+    select.innerHTML = SUPPLY_PERSONAS.map(p=>`<option value="${p.id}">${p.icon} ${p.name}</option>`).join('');
+  } else {
+    personaField.style.display = 'none';
+  }
+}
+async function submitAuth(){
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const errEl = document.getElementById('authError');
+  errEl.textContent = '';
+  try {
+    if(authMode === 'login'){
+      const data = await api('/auth/login', { method:'POST', body:{ email, password } });
+      session.token = data.token; session.user = data.user;
+    } else {
+      const displayName = document.getElementById('authName').value.trim();
+      const personaId = document.getElementById('authPersona').value;
+      if(!displayName){ errEl.textContent = 'نام نمایشی رو وارد کن'; return; }
+      const data = await api('/auth/register', { method:'POST', body:{ email, password, displayName, role:authRole, personaId } });
+      session.token = data.token; session.user = data.user;
+    }
+    localStorage.setItem('rv_token', session.token);
+    await enterApp();
+  } catch(err){
+    errEl.textContent = err.message;
+  }
+}
+function logout(){
+  localStorage.removeItem('rv_token');
+  session = { token:null, user:null };
+  document.getElementById('appRoot').classList.add('hidden');
+  document.getElementById('authOverlay').classList.remove('hidden');
+}
+
+async function enterApp(){
+  await refreshState();
+  document.getElementById('authOverlay').classList.add('hidden');
+  document.getElementById('appRoot').classList.remove('hidden');
+  renderDemandPersonas();
+  renderSupplyPersonas();
+  renderAll();
+}
+
+async function refreshState(){
+  serverState = await api('/state');
+}
+
+function renderAll(){
+  renderWallet();
+  renderDemandOrders();
+  renderSupplyRequests();
+  renderDesignerNetwork();
+  renderStore();
+}
+
+/* ---------------- DEMAND PERSONA (client-side preference only) ---------------- */
+function renderDemandPersonas(){
+  document.getElementById('demandPersonaGrid').innerHTML = DEMAND_PERSONAS.map(p=>`
+    <div class="persona-card ${selectedDemandPersonaId===p.id?'sel':''}" onclick="selectDemandPersona('${p.id}')">
+      <div class="ic">${p.icon}</div><h5>${p.name}</h5><p>${p.desc}</p>
+    </div>`).join('');
+}
+function selectDemandPersona(id){
+  selectedDemandPersonaId = id;
+  renderDemandPersonas();
+  const p = DEMAND_PERSONAS.find(x=>x.id===id);
+  document.getElementById('demandPersonaLabel').textContent = p.name;
+  toast(`پرسونا انتخاب شد: ${p.name} (فقط برای تطبیق سفارش بعدی)`);
+}
+
+/* ---------------- SUPPLY PERSONA (fixed at registration — read only here) ---------------- */
+function renderSupplyPersonas(){
+  const mine = serverState?.myDesignerProfile;
+  document.getElementById('supplyPersonaGrid').innerHTML = SUPPLY_PERSONAS.map(p=>`
+    <div class="persona-card ${mine && mine.persona===p.name ? 'sel' : ''}" style="cursor:default;">
+      <div class="ic">${p.icon}</div><h5>${p.name}</h5><p>${p.desc}</p>
+    </div>`).join('');
+  if(session.user?.role !== 'designer'){
+    document.getElementById('panel-supply').querySelector('.section-head p').textContent =
+      'این پنل فقط برای حساب‌های «طراح» فعاله. با یک حساب طراح وارد شو تا سفارش‌های تطبیق‌یافته رو ببینی.';
+  }
+}
+
+/* ---------------- WALLET / PREMIUM ---------------- */
+function renderWallet(){
+  document.getElementById('walletTop').textContent = fmt(serverState.wallet);
+  document.getElementById('walletDash').textContent = fmt(serverState.wallet);
+  document.getElementById('designerEarnings').textContent = fmt(serverState.myDesignerProfile?.earnings || 0);
+}
+
+// ⚠️ Still a MOCK top-up (see src/routes/wallet.js) — no real gateway wired yet.
+async function topUp(){
+  try{
+    await api('/wallet/topup', { method:'POST', body:{ amount:500000 } });
+    await refreshState(); renderWallet();
+    toast('کیف پول ۵۰۰٬۰۰۰ تومان شارژ شد (حالت آزمایشی — بدون درگاه واقعی)');
+  } catch(err){ toast(err.message); }
+}
+async function subscribeClinicPremium(){
+  try{
+    await api('/wallet/premium/clinic', { method:'POST' });
+    await refreshState();
+    document.getElementById('premiumClinicBtn').outerHTML = '<span class="premium-tag">👑 Premium فعال — دسترسی نامحدود آرشیو</span>';
+    renderWallet(); renderStore();
+    toast('اشتراک Premium کلینیک فعال شد');
+  } catch(err){ toast(err.message); }
+}
+async function subscribeDesignerPremium(){
+  try{
+    await api('/wallet/premium/designer', { method:'POST' });
+    await refreshState();
+    document.getElementById('premiumDesignerBtn').outerHTML = '<span class="premium-tag">👑 Premium فعال — ۵٪ تخفیف کمیسیون</span>';
+    renderWallet();
+    toast('اشتراک Premium طراح فعال شد');
+  } catch(err){ toast(err.message); }
+}
+async function promoteCurrentDesigner(){
+  try{
+    await api('/wallet/promote', { method:'POST' });
+    await refreshState();
+    document.getElementById('promoteBtn').outerHTML = '<span class="sponsored-tag">🚀 پروفایل ویژه فعال</span>';
+    renderWallet(); renderStore(); renderDesignerNetwork();
+    toast('پروفایل و فایل‌هات اکنون ویژه نمایش داده می‌شن');
+  } catch(err){ toast(err.message); }
+}
+
+/* ---------------- CUSTOM ORDER (DEMAND) ---------------- */
+document.getElementById('ordBudget')?.addEventListener('input', updatePerPatientHint);
+document.getElementById('ordPatients')?.addEventListener('input', updatePerPatientHint);
+function updatePerPatientHint(){
+  const budget = parseInt(document.getElementById('ordBudget').value)||0;
+  const patients = parseInt(document.getElementById('ordPatients').value)||1;
+  document.getElementById('perPatientHint').textContent = `هزینه به‌ازای هر مراجع: ${fmt(budget/patients)} تومان`;
+}
+
+async function createOrder(){
+  if(session.user?.role !== 'clinic'){ toast('فقط حساب‌های کلینیک می‌توانند سفارش ثبت کنند'); return; }
+  const title = document.getElementById('ordTitle').value.trim() || 'محیط درمانی سفارشی';
+  const brief = document.getElementById('ordBrief').value.trim();
+  const budget = parseInt(document.getElementById('ordBudget').value) || 0;
+  const patients = parseInt(document.getElementById('ordPatients').value) || 1;
+  const commission = parseInt(document.getElementById('ordLevel').value);
+
+  try{
+    const { matchedDesigner } = await api('/orders', { method:'POST', body:{ title, brief, budget, patients, commission, personaId:selectedDemandPersonaId } });
+    await refreshState();
+    renderWallet(); renderDemandOrders(); renderSupplyRequests();
+    toast(`🤖 تطبیق هوشمند: سفارش به «${matchedDesigner}» ارجاع شد`);
+  } catch(err){ toast(err.message); }
+}
+
+function renderDemandOrders(){
+  const box = document.getElementById('demandOrderList');
+  const orders = session.user?.role === 'clinic' ? (serverState.orders || []) : [];
+  if(orders.length === 0){ box.innerHTML = '<p style="font-size:11px;color:var(--ink-faint);">هنوز سفارشی ثبت نشده.</p>'; return; }
+  box.innerHTML = orders.map(o=>{
+    const sm = statusMeta(o.disputed ? 'disputed' : o.status);
+    const d = designerById(o.designer_id);
+    let action = '';
+    if(o.disputed){
+      action = `<span style="font-size:10px;color:var(--ink-faint);">در انتظار رأی داور مستقل پلتفرم</span>`;
+    } else if(o.status === 'delivered'){
+      action = `<div style="display:flex; gap:8px;">
+        <button class="btn btn-primary btn-sm" onclick="releaseFunds(${o.id})">تأیید و آزادسازی وجه</button>
+        <button class="btn btn-outline btn-sm" onclick="openDispute(${o.id})">گزارش اختلاف</button>
+      </div>`;
+    } else if(o.status === 'released'){
+      action = `<div class="donut-mini">${miniDonut(o.designer_share, o.platform_share)}
+        <div style="font-size:10px;color:var(--ink-muted);">
+          <div>● طراح: ${fmt(o.designer_share)} ت</div><div>● پلتفرم: ${fmt(o.platform_share)} ت</div>
+        </div></div>`;
+    } else {
+      action = `<span style="font-size:10px;color:var(--ink-faint);">در انتظار پیشرفت طراح...</span>`;
+    }
+    return `<div class="order-item">
+      <div class="top">
+        <div><h5>${o.title}</h5><div class="sub">سفارش #${1040+o.id} · ${patientsLabel(o)} · کمیسیون ${o.commission}٪</div></div>
+        <span class="status-tag ${sm.cls}">${sm.label}</span>
+      </div>
+      <div class="match-note">🤖 تطبیق‌شده با: <b>${d?d.avatar+' '+d.name:'—'}</b> (${o.specialty}) ${d&&d.promoted?'<span class="sponsored-tag">🚀 ویژه</span>':''}</div>
+      <div class="split-mini"><span>مبلغ کل: <b>${fmt(o.budget)} ت</b></span><span>سهم طراح: <b>${fmt(o.designer_share)} ت</b></span><span>کارمزد: <b>${fmt(o.platform_share)} ت</b></span></div>
+      ${action}
+    </div>`;
+  }).join('');
+}
+function patientsLabel(o){ return `${o.patients} مراجع · ${fmt(o.budget/o.patients)} ت/مراجع`; }
+
+async function releaseFunds(id){
+  try{ await api(`/orders/${id}/release`, { method:'POST' }); await refreshState(); renderAll(); toast('وجه آزاد شد — سهم طراح واریز گردید'); }
+  catch(err){ toast(err.message); }
+}
+async function openDispute(id){
+  try{ await api(`/orders/${id}/dispute`, { method:'POST' }); await refreshState(); renderDemandOrders(); toast('اختلاف ثبت شد — وجه تا رأی داور نزد پلتفرم بلوکه می‌ماند'); }
+  catch(err){ toast(err.message); }
+}
+function miniDonut(share1, share2){
+  const total = Number(share1)+Number(share2) || 1;
+  const c = 2*Math.PI*24; const p1 = (share1/total)*c;
+  return `<svg width="52" height="52" viewBox="0 0 56 56">
+    <circle cx="28" cy="28" r="24" fill="none" stroke="var(--line)" stroke-width="7"/>
+    <circle cx="28" cy="28" r="24" fill="none" stroke="var(--teal-600)" stroke-width="7" stroke-dasharray="${p1} ${c}" stroke-linecap="round" transform="rotate(-90 28 28)"/>
+    <circle cx="28" cy="28" r="24" fill="none" stroke="var(--gold-500)" stroke-width="7" stroke-dasharray="${c-p1} ${c}" stroke-dashoffset="${-p1}" stroke-linecap="round" transform="rotate(-90 28 28)"/>
+  </svg>`;
+}
+
+/* ---------------- SUPPLY SIDE ---------------- */
+function renderSupplyRequests(){
+  const box = document.getElementById('supplyRequestList');
+  const emptyMsg = document.getElementById('supplyEmptyMsg');
+  const orders = session.user?.role === 'designer' ? (serverState.orders || []) : [];
+  const relevant = orders.filter(o=> o.status==='awaiting_designer' || o.status==='in_progress' || o.disputed);
+  emptyMsg.style.display = relevant.length===0 ? 'block' : 'none';
+  box.innerHTML = relevant.map(o=>{
+    const sm = statusMeta(o.disputed?'disputed':o.status);
+    const action = o.disputed ? `<span style="font-size:10px;color:var(--red-500);">در انتظار رأی داور</span>`
+      : o.status==='awaiting_designer'
+      ? `<button class="btn btn-outline btn-sm" onclick="designerAccept(${o.id})">پذیرفتن سفارش</button>`
+      : `<button class="btn btn-primary btn-sm" onclick="designerDeliver(${o.id})">تحویل فایل نهایی</button>`;
+    return `<div class="req-card">
+      <div class="top" style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div><h5 style="font-size:12px;color:var(--teal-900);">${o.title}</h5><div class="sub" style="font-size:10px;color:var(--ink-faint);">#${1040+o.id} · ${o.specialty} · سهم شما: ${fmt(o.designer_share)} ت</div></div>
+        <span class="status-tag ${sm.cls}">${sm.label}</span>
+      </div>
+      ${o.brief ? `<div class="brief">📝 ${o.brief}</div>` : ''}
+      ${action}
+    </div>`;
+  }).join('');
+}
+async function designerAccept(id){
+  try{ await api(`/orders/${id}/accept`, { method:'POST' }); await refreshState(); renderSupplyRequests(); toast('سفارش پذیرفته شد'); }
+  catch(err){ toast(err.message); }
+}
+async function designerDeliver(id){
+  try{ await api(`/orders/${id}/deliver`, { method:'POST' }); await refreshState(); renderSupplyRequests(); toast('فایل تحویل داده شد — منتظر تأیید کلینیک'); }
+  catch(err){ toast(err.message); }
+}
+
+/* ---------------- DESIGNER NETWORK ---------------- */
+function renderDesignerNetwork(){
+  const sorted = [...(serverState.designers||[])].sort((a,b)=>(b.promoted-a.promoted)||(b.rating-a.rating));
+  document.getElementById('designerNetworkGrid').innerHTML = sorted.map(d=>`
+    <div class="card designer-card ${serverState.myDesignerProfile && d.id===serverState.myDesignerProfile.id?'current':''}">
+      ${d.promoted?'<span class="sponsored-tag" style="position:absolute; top:10px; left:10px;">🚀 ویژه</span>':''}
+      <div class="designer-avatar">${d.avatar}</div>
+      <h5>${d.name}</h5>
+      <div class="spec">${d.specialty}</div>
+      <div class="rating">★ ${Number(d.rating).toFixed(1)} · ${d.completed} پروژه تکمیل‌شده</div>
+      <div style="margin-top:8px; display:flex; gap:5px; justify-content:center; flex-wrap:wrap;">
+        <span class="trust-badge">✓ تأیید شبکه</span>
+        ${d.premium?'<span class="premium-tag">👑 Premium</span>':''}
+      </div>
+    </div>`).join('');
+}
+
+/* ---------------- ASSET STORE ---------------- */
+function renderStore(){
+  const grid = document.getElementById('storeGrid');
+  const sorted = [...(serverState.storeItems||[])].sort((a,b)=>(b.promoted-a.promoted));
+  const isPremium = session.user?.role==='clinic' && serverState.user?.clinic_premium;
+  grid.innerHTML = sorted.map(item=>{
+    const badges = `<div class="badge-row">
+      ${item.verified?'<span class="trust-badge">✓ تأیید بالینی</span>':'<span class="pending-tag">⏳ در انتظار بررسی</span>'}
+      ${item.promoted?'<span class="sponsored-tag">🚀 ویژه</span>':''}
+    </div>`;
+    const priceLabel = isPremium ? `<span style="text-decoration:line-through;color:var(--ink-faint);">${fmt(item.price)}</span> رایگان (Premium)` : `${fmt(item.price)} تومان`;
+    const buyBtn = !item.verified ? `<button class="btn btn-outline btn-sm" disabled>در دسترس نیست</button>`
+      : `<button class="btn btn-primary btn-sm" onclick="buyAsset(${item.id})">خرید فوری</button>`;
+    return `<div class="asset-card">
+      <div class="asset-thumb" style="background:${item.color};">${item.icon}</div>
+      <div class="asset-body">
+        <h5>${item.name}</h5>
+        <div class="price">${priceLabel}</div>
+        ${badges}
+        <div style="margin-top:8px;">${buyBtn}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function buyAsset(id){
+  if(session.user?.role !== 'clinic'){ toast('فقط حساب‌های کلینیک می‌توانند خرید کنند'); return; }
+  try{
+    const r = await api('/store/buy', { method:'POST', body:{ itemId:id } });
+    await refreshState();
+    renderWallet(); renderDemandOrders(); renderStore(); renderDesignerNetwork();
+    toast(r.free ? 'دانلود رایگان (عضو Premium)' : `خریداری شد — ${fmt(r.designerShare)} ت (۷۰٪) به طراح واریز شد`);
+  } catch(err){ toast(err.message); }
+}
+async function publishAsset(){
+  if(session.user?.role !== 'designer'){ toast('فقط حساب‌های طراح می‌توانند فایل منتشر کنند'); return; }
+  const name = document.getElementById('newAssetName').value.trim();
+  const price = parseInt(document.getElementById('newAssetPrice').value) || 0;
+  try{
+    await api('/store/publish', { method:'POST', body:{ name, price } });
+    await refreshState(); renderStore();
+    document.getElementById('newAssetName').value='';
+    toast('فایل ارسال شد — در انتظار تأیید مشاور بالینی (بررسی واقعی توسط ادمین)');
+    switchTab('store');
+  } catch(err){ toast(err.message); }
+}
+
+/* ---------------- CHAT ---------------- */
+function toggleChat(){ document.getElementById('chatBox').classList.toggle('open'); }
+
+/* ---------------- INIT ---------------- */
+setAuthMode('login');
+setRole('clinic');
+if(session.token){
+  enterApp().catch(()=>{ logout(); });
+}
+</script>
+</body>
+</html>
