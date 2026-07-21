@@ -792,9 +792,10 @@ function toggleChat(){ document.getElementById('chatBox').classList.toggle('open
 /* ---------------- INIT ---------------- */
 setAuthMode('login');
 setRole('clinic');
-if(session.token){
-  enterApp().catch(()=>{ logout(); });
-}
+document.getElementById('authOverlay').classList.add('hidden');
+document.getElementById('appRoot').classList.remove('hidden');
+renderDemandPersonas();
+renderSupplyPersonas();
 </script>
 </body>
 </html>
